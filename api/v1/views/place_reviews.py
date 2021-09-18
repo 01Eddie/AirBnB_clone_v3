@@ -68,7 +68,7 @@ def place_review_post(place_id):
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
-def place_put(review_id):
+def place_revies_put(review_id):
     """update a place review"""
     placeR = storage.get("Review", review_id)
     if placeR is None:
