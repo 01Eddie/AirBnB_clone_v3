@@ -62,7 +62,7 @@ def place_review_post(place_id):
     user = storage.get("User", placeR['user_id'])
     if user is None:
         abort(404)
-    if 'text' not in place:
+    if 'text' not in placeR:
         abort(400, 'Missing text')
     placeR['place_id'] = place_id
     kPlaceR = Review(**placeR)
