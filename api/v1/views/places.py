@@ -38,7 +38,7 @@ def retrieve_place(place_id):
                  strict_slashes=False)
 def place_delete(place_id):
     """delete a place"""
-    place = storage.get("User", place_id)
+    place = storage.get("Place", place_id)
     if place is None:
         abort(404)
     place.delete()
