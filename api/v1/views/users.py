@@ -14,7 +14,7 @@ from models.user import User
 def get_users():
     """get users"""
     getListU = []
-    for user in storage.all("Users").values():
+    for user in storage.all("User").values():
         getListU.append(user.to_dict())
     return jsonify(getListU)
 
