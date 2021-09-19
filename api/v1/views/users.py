@@ -36,7 +36,7 @@ def user_delete(user_id):
         abort(404)
     user.delete()
     storage.save()
-    return jsonify({})
+    return make_response(jsonify({}), 200)
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
@@ -54,9 +54,9 @@ def user_post():
 
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
-def user_put(amenity_id):
+def user_put(user_id):
     """update a user"""
-    user = storage.get("User", amenity_id)
+    user = storage.get("User", user_id)
     if user is None:
         abort(404)
     if request.get_json() is None:
