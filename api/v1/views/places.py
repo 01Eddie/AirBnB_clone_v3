@@ -43,7 +43,7 @@ def place_delete(place_id):
         abort(404)
     place.delete()
     storage.save()
-    return jsonify({}), 200
+    return jsonify({})
 
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'],
@@ -62,12 +62,12 @@ def place_post(city_id):
     if user is None:
         abort(404)
     if 'name' not in place:
-        abort(400, 'Missing password')
+        abort(400, 'Missing name')
     place['city_id'] = city_id
     kPlace = Place(**place)
     storage.new(kPlace)
     storage.save()
-    return (kPlace.to_dict()), 201
+    return make_response((kPlace.to_dict()), 201)
 
 
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
@@ -82,4 +82,4 @@ def place_put(place_id):
         if k not in ['id', 'user_id', 'created_at', 'updated_at', 'city_id']:
             setattr(place, k, v)
     place.save()
-    return jsonify(place.to_dict()), 200
+    return jsonify(place.to_dict())
