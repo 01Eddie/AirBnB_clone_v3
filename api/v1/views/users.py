@@ -36,7 +36,7 @@ def user_delete(user_id):
         abort(404)
     user.delete()
     storage.save()
-    return jsonify({}), 200
+    return jsonify({})
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
@@ -48,10 +48,9 @@ def user_post():
         abort(400, 'Missing email')
     if 'password' not in request.get_json():
         abort(400, 'Missing password')
-    kUser = request.get_json()
-    storage.new(User(**kUser))
-    storage.save()
-    return (User(**kUser).to_dict()), 201
+    user = User(**request.get_json())
+    user.save()
+    return make_response(jsonify(user.to_dict()), 201)
 
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
@@ -66,4 +65,4 @@ def user_put(amenity_id):
         if k not in ['id', 'email', 'created_at', 'updated_at']:
             setattr(user, k, v)
     user.save()
-    return jsonify(user.to_dict()), 200
+    return jsonify(user.to_dict())
