@@ -16,7 +16,7 @@ from models.review import Review
                  strict_slashes=False)
 def get_place_reviews(place_id):
     """get places reviews"""
-    objPlaceReview = storage.get("Review", place_id)
+    objPlaceReview = storage.get("Place", place_id)
     if objPlaceReview is None:
         abort(404)
     getListPR = []
@@ -44,7 +44,7 @@ def place_review_delete(review_id):
         abort(404)
     placeR.delete()
     storage.save()
-    return jsonify({}), 200
+    return jsonify({})
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['POST'],
@@ -68,7 +68,7 @@ def place_review_post(place_id):
     kPlaceR = Review(**placeR)
     storage.new(kPlaceR)
     storage.save()
-    return (kPlaceR.to_dict()), 201
+    return make_response((kPlaceR.to_dict()), 201)
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
@@ -81,7 +81,7 @@ def place_revies_put(review_id):
         abort(400, 'Not a JSON')
     for k, v in request.get_json().items():
         if k not in ['id', 'user_id', 'place_id', 'created_at',
-                     'updated_at', 'city_id']:
+                     'updated_at']:
             setattr(placeR, k, v)
     placeR.save()
-    return jsonify(placeR.to_dict()), 200
+    return jsonify(placeR.to_dict())
