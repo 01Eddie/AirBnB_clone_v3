@@ -9,10 +9,10 @@ from models.city import City
 from models.amenity import Amenity
 from models.user import User
 from models.place import Place
-f = False
 
 
-@app_views.route('/cities/<city_id>/places', methods=['GET'], strict_slashes=f)
+@app_views.route('/cities/<city_id>/places', methods=['GET'],
+                 strict_slashes=False)
 def get_place(city_id):
     """get places"""
     objPlace = storage.get("City", city_id)
@@ -25,7 +25,7 @@ def get_place(city_id):
     return jsonify(getListU)
 
 
-@app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=f)
+@app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
 def retrieve_place(place_id):
     """get place by id"""
     place = storage.get("Place", place_id)
@@ -34,7 +34,8 @@ def retrieve_place(place_id):
     return jsonify(place.to_dict())
 
 
-@app_views.route('/places/<place_id>', methods=['DELETE'], strict_slashes=f)
+@app_views.route('/places/<place_id>', methods=['DELETE'],
+                 strict_slashes=False)
 def place_delete(place_id):
     """delete a place"""
     place = storage.get("User", place_id)
@@ -45,10 +46,8 @@ def place_delete(place_id):
     return jsonify({}), 200
 
 
-p = 'POST'
-
-
-@app_views.route('/cities/<city_id>/places', methods=[p], strict_slashes=f)
+@app_views.route('/cities/<city_id>/places', methods=['POST'],
+                 strict_slashes=False)
 def place_post(city_id):
     """create a place"""
     city = storage.get("City", city_id)
@@ -71,7 +70,7 @@ def place_post(city_id):
     return (kPlace.to_dict()), 201
 
 
-@app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=f)
+@app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
 def place_put(place_id):
     """update a place"""
     place = storage.get("Place", place_id)
