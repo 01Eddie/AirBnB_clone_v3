@@ -59,16 +59,16 @@ def place_review_post(place_id):
         abort(400, 'Not a JSON')
     if 'user_id' not in placeR:
         abort(400, 'Missing user_id')
-    user = storage.get("User", placeR.get("user_id"))
+    user = storage.get("User", placeR['user_id'])
     if user is None:
         abort(404)
     if 'text' not in place:
-        abort(400, 'Missing password')
+        abort(400, 'Missing text')
     placeR['place_id'] = place_id
     kPlaceR = Review(**placeR)
     storage.new(kPlaceR)
     storage.save()
-    return make_response((kPlaceR.to_dict()), 201)
+    return make_response(jsonify(kPlaceR.to_dict()), 201)
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
