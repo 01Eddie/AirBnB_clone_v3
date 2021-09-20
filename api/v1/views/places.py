@@ -9,6 +9,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.user import User
 from models.place import Place
+from os import getenv
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
@@ -91,7 +92,7 @@ def post_places_search():
     post_data = request.get_json()
     places_search = []
     if post_data is None or type(post_data) != dict:
-        return jsonify({'error': 'Not a JSON'}), 400
+        abort(400, 'Not a JSON')
     place = storage.all('Place').values()
     if len(post_data) == 0:
         return jsonify([x.to_dict() for x in place])
