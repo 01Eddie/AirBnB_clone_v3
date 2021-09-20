@@ -89,107 +89,48 @@ def place_put(place_id):
 @app_views.route('/places_search', methods=['POST'], strict_slashes=False)
 def post_places_search():
     """searches for a place"""
-    places = storage.all(Place).values()
-    places_list = []
-    states_list = []
+    data = request.get_json(silent=True)
+    if type(data) != dict:
+        abort(400, 'Not a JSON')
+    sid_list = data.get("states")
+    cid_list = data.get("cities")
+    aid_list = data.get("amenities")
     cities_list = []
-    amenities_list = []
-    slist = []
-    clist = []
-    alist = []
-    plist = []
-    slist_two = []
-    clist_two = []
-    states_len = 0
-    cities_len = 0
-    amenities_len = 0
-    amenity_exists_list = []
-    try:
-        new_dict = request.get_json()
-    except:
-        return {"error": "Not a JSON"}, 400
-    if request.headers['Content-Type'] != 'application/json':
-        return {"error": "Not a JSON"}, 400
-    for place in places:
-        places_list.append(place.to_dict())
-    if len(new_dict) == 0:
-        return jsonify(places_list)
-    if 'states' in new_dict:
-        states_len = len(new_dict['states'])
-        states_list = new_dict['states']
-    if 'cities' in new_dict:
-        cities_len = len(new_dict['cities'])
-        cities_list = new_dict['cities']
-    if 'amenities' in new_dict:
-        amenities_len = len(new_dict['amenities'])
-        amenities_list = new_dict['amenities']
-    amenity_list_length = len(amenities_list)
-    total_len = states_len + cities_len + amenities_len
-    if total_len == 0:
-        return jsonify(places_list)
-    if states_len > 0:
-        for state_id in states_list:
-            my_state = storage.get(State, state_id)
-            if my_state is not None:
-                slist.append(my_state)
-        for state in slist:
-            for city in state.cities:
-                for place in city.places:
-                    plist.append(place.to_dict())
-    if cities_len > 0:
-        for city_id in cities_list:
-            my_city = storage.get(City, city_id)
-            if my_city is not None:
-                clist.append(my_city)
-        for city in clist:
-            for place in city.places:
-                plist.append(place.to_dict())
-    if amenities_len > 0:
-        if len(plist) == 0:
-            for place in places:
-                amenity_exists_list = []
-                for a in place.amenities:
-                    for amenity_id in amenities_list:
-                        if a.id == amenity_id:
-                            amenity_exists_list.append(1)
-                            break
-                if len(amenity_exists_list) == amenity_list_length:
-                    plist.append(place.to_dict())
-        else:
-            plist_two = []
-            if states_len > 0:
-                for state_id in states_list:
-                    my_state = storage.get(State, state_id)
-                    if my_state is not None:
-                        slist_two.append(my_state)
-                for state in slist_two:
-                    for city in state.cities:
-                        for place in city.places:
-                            amenity_exists_list = []
-                            for a in place.amenities:
-                                for amenity_id in amenities_list:
-                                    if a.id == amenity_id:
-                                        amenity_exists_list.append(1)
-                                        break
-                            if len(amenity_exists_list) == amenity_list_length:
-                                plist_two.append(place.to_dict())
-            if cities_len > 0:
-                for city_id in cities_list:
-                    my_city = storage.get(City, city_id)
-                    if my_city is not None:
-                        clist_two.append(my_city)
-                for city in clist_two:
-                    for place in city.places:
-                        amenity_exists_list = []
-                        for a in place.amenities:
-                            for amenity_id in amenities_list:
-                                if a.id == amenity_id:
-                                    amenity_exists_list.append(1)
-                                    break
-                        if len(amenity_exists_list) == amenity_list_length:
-                            plist_two.append(place.to_dict())
-            if len(plist_two) > 0:
-                return jsonify(plist_two)
-    if len(plist) > 0:
-        return jsonify(plist)
-    return {"error": "Not found"}, 404
+    if sid_list:
+        for state_id in sid_list:
+            s = storage.get("State", state_id)
+            if s:
+                cities_list += s.cities
+            else:
+                return jsonify("Bad State"), 404
+    if cid_list:
+        for city_id in cid_list:
+            c = storage.get("City", city_id)
+            if c:
+                if c not in cities_list:
+                    cities_list.append(c)
+            else:
+                return jsonify("Bad City"), 404
+    place_list = []
+    if cities_list:
+        for city in cities_list:
+            place_list += city.places
+    else:
+        place_list = storage.all("Place").values()
+    if aid_list:
+        amenity_list = []
+        for amenity_id in aid_list:
+            a = storage.get("Amenity", amenity_id)
+            if a:
+                amenity_list.append(a)
+            else:
+                return jsonify("Bad Amenity"), 404
+        filter_list = []
+        for place in place_list:
+            if all(amenity in place.amenities for amenity in amenity_list):
+                pd = place.to_dict()
+                pd.pop('amenities')
+                filter_list.append(pd)
+        return jsonify(filter_list)
+    else:
+        return jsonify([p.to_dict() for p in place_list])
