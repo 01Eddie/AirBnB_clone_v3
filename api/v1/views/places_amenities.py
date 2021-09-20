@@ -63,8 +63,8 @@ def amenity_place_post(place_id, amenity_id):
         placeAmenityObj = place.amenities
     else:
         placeAmenityObj = place.amenity_ids
-    if amenity not in placeAmenityObj:
-        abort(404)
+    if amenity in placeAmenityObj:
+        return jsonify(amenity.to_dict())
     placeAmenityObj.append(amenity)
     place.save()
     return make_response(jsonify(amenity.to_dict()), 201)
