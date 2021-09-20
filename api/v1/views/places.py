@@ -89,52 +89,107 @@ def place_put(place_id):
 @app_views.route('/places_search', methods=['POST'], strict_slashes=False)
 def post_places_search():
     """searches for a place"""
-    post_data = request.get_json()
-    places_search = []
-    if post_data is None or type(post_data) != dict:
-        abort(400, 'Not a JSON')
-    place = storage.all('Place').values()
-    if len(post_data) == 0:
-        return jsonify([x.to_dict() for x in place])
-    state_ids = post_data.get('states')
-    if state_ids is None:
-        state_ids = []
-    city_ids = post_data.get('cities')
-    if city_ids is None:
-        city_ids = []
-    amen_ids = post_data.get('amenities')
-    if amen_ids is None:
-        amen_ids = []
-    if len(state_ids) == 0 and len(city_ids) == 0 and len(amenity_ids) == 0:
-        return jsonify([x.to_dict() for x in place])
-    for c in city_ids:
-        city = storage.get('City', c)
-        if city is not None:
-            for p in city.places and p.to_dict() not in places_search:
-                places_search.append(p.to_dict())
-    for s in state_ids:
-        state = storage.get('State', s)
-        if state is not None:
-            for cit in state.cities:
-                if cit.id not in city_ids:
-                    for pla in cit.places:
-                        if pla.to_dict() not in places_search:
-                            places_search.append(pla.to_dict())
-    for p in place:
-        if len(amen_ids) == 0:
-            break
-        all_match = True
-        if getenv('HBNB_TYPE_STORAGE') != 'db':
-            for ids in amen_ids:
-                if ids not in p.amenity_ids:
-                    all_match = False
-                    break
+    places = storage.all(Place).values()
+    places_list = []
+    states_list = []
+    cities_list = []
+    amenities_list = []
+    slist = []
+    clist = []
+    alist = []
+    plist = []
+    slist_two = []
+    clist_two = []
+    states_len = 0
+    cities_len = 0
+    amenities_len = 0
+    amenity_exists_list = []
+    try:
+        new_dict = request.get_json()
+    except:
+        return {"error": "Not a JSON"}, 400
+    if request.headers['Content-Type'] != 'application/json':
+        return {"error": "Not a JSON"}, 400
+    for place in places:
+        places_list.append(place.to_dict())
+    if len(new_dict) == 0:
+        return jsonify(places_list)
+    if 'states' in new_dict:
+        states_len = len(new_dict['states'])
+        states_list = new_dict['states']
+    if 'cities' in new_dict:
+        cities_len = len(new_dict['cities'])
+        cities_list = new_dict['cities']
+    if 'amenities' in new_dict:
+        amenities_len = len(new_dict['amenities'])
+        amenities_list = new_dict['amenities']
+    amenity_list_length = len(amenities_list)
+    total_len = states_len + cities_len + amenities_len
+    if total_len == 0:
+        return jsonify(places_list)
+    if states_len > 0:
+        for state_id in states_list:
+            my_state = storage.get(State, state_id)
+            if my_state is not None:
+                slist.append(my_state)
+        for state in slist:
+            for city in state.cities:
+                for place in city.places:
+                    plist.append(place.to_dict())
+    if cities_len > 0:
+        for city_id in cities_list:
+            my_city = storage.get(City, city_id)
+            if my_city is not None:
+                clist.append(my_city)
+        for city in clist:
+            for place in city.places:
+                plist.append(place.to_dict())
+    if amenities_len > 0:
+        if len(plist) == 0:
+            for place in places:
+                amenity_exists_list = []
+                for a in place.amenities:
+                    for amenity_id in amenities_list:
+                        if a.id == amenity_id:
+                            amenity_exists_list.append(1)
+                            break
+                if len(amenity_exists_list) == amenity_list_length:
+                    plist.append(place.to_dict())
         else:
-            for ids in amen_ids:
-                cur_amenity = storage.get('Amenity', ids)
-                if cur_amenity is None or cur_amenity not in p.amenities:
-                    all_match = False
-                    break
-        if all_match is True and p.to_dict() not in places_search:
-            places_search.append(p.to_dict())
-    return jsonify(places_search)
+            plist_two = []
+            if states_len > 0:
+                for state_id in states_list:
+                    my_state = storage.get(State, state_id)
+                    if my_state is not None:
+                        slist_two.append(my_state)
+                for state in slist_two:
+                    for city in state.cities:
+                        for place in city.places:
+                            amenity_exists_list = []
+                            for a in place.amenities:
+                                for amenity_id in amenities_list:
+                                    if a.id == amenity_id:
+                                        amenity_exists_list.append(1)
+                                        break
+                            if len(amenity_exists_list) == amenity_list_length:
+                                plist_two.append(place.to_dict())
+            if cities_len > 0:
+                for city_id in cities_list:
+                    my_city = storage.get(City, city_id)
+                    if my_city is not None:
+                        clist_two.append(my_city)
+                for city in clist_two:
+                    for place in city.places:
+                        amenity_exists_list = []
+                        for a in place.amenities:
+                            for amenity_id in amenities_list:
+                                if a.id == amenity_id:
+                                    amenity_exists_list.append(1)
+                                    break
+                        if len(amenity_exists_list) == amenity_list_length:
+                            plist_two.append(place.to_dict())
+            if len(plist_two) > 0:
+                return jsonify(plist_two)
+    if len(plist) > 0:
+        return jsonify(plist)
+    return {"error": "Not found"}, 404
