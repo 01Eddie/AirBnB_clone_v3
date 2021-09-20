@@ -24,7 +24,7 @@ def retrieve_Amenity_for_place(place_id):
         abort(404)
     getListA = []
     if TYPE_STORAGE == 'db':
-        amenitiesObjs = place.getListA
+        amenitiesObjs = place.amenities
     else:
         amenitiesObjs = place.amenity_ids
     for placeR in amenitiesObjs:
