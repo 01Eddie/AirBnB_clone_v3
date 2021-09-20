@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """places amenities"""
 
+from os import getenv
 from models import storage
 from api.v1.views import app_views
 from flask import jsonify, abort, make_response, request
@@ -10,7 +11,6 @@ from models.amenity import Amenity
 from models.user import User
 from models.place import Place
 from models.review import Review
-from os import getenv
 
 TYPE_STORAGE = getenv('HBNB_TYPE_STORAGE')
 
@@ -27,8 +27,8 @@ def retrieve_Amenity_for_place(place_id):
         amenitiesObjs = place.amenities
     else:
         amenitiesObjs = place.amenity_ids
-    for placeR in amenitiesObjs:
-        getListA.append(placeR.to_dict())
+    for placeA in amenitiesObjs:
+        getListA.append(placeA.to_dict())
     return jsonify(getListA)
 
 
