@@ -5,9 +5,12 @@ from models import storage
 from api.v1.views import app_views
 from flask_cors import CORS, cross_origin
 import os
+from flasgger import Swagger
 
 app = Flask(__name__)
+swagger = Swagger(app)
 CORS(app, resources={r"/*": {"origins": "0.0.0.0"}})
+# Is defined in api/v1/views
 app.register_blueprint(app_views, url_prefix="/api/v1")
 
 
