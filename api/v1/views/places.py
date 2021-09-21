@@ -9,6 +9,7 @@ from models.city import City
 from models.amenity import Amenity
 from models.user import User
 from models.place import Place
+from os import getenv
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
@@ -83,3 +84,53 @@ def place_put(place_id):
             setattr(place, k, v)
     place.save()
     return jsonify(place.to_dict())
+
+
+@app_views.route('/places_search', methods=['POST'], strict_slashes=False)
+def post_places_search():
+    """searches for a place"""
+    data = request.get_json(silent=True)
+    if type(data) != dict:
+        abort(400, 'Not a JSON')
+    sid_list = data.get("states")
+    cid_list = data.get("cities")
+    aid_list = data.get("amenities")
+    cities_list = []
+    if sid_list:
+        for state_id in sid_list:
+            s = storage.get("State", state_id)
+            if s:
+                cities_list += s.cities
+            else:
+                return jsonify("Bad State"), 404
+    if cid_list:
+        for city_id in cid_list:
+            c = storage.get("City", city_id)
+            if c:
+                if c not in cities_list:
+                    cities_list.append(c)
+            else:
+                return jsonify("Bad City"), 404
+    place_list = []
+    if cities_list:
+        for city in cities_list:
+            place_list += city.places
+    else:
+        place_list = storage.all("Place").values()
+    if aid_list:
+        amenity_list = []
+        for amenity_id in aid_list:
+            a = storage.get("Amenity", amenity_id)
+            if a:
+                amenity_list.append(a)
+            else:
+                return jsonify("Bad Amenity"), 404
+        filter_list = []
+        for place in place_list:
+            if all(amenity in place.amenities for amenity in amenity_list):
+                pd = place.to_dict()
+                pd.pop('amenities')
+                filter_list.append(pd)
+        return jsonify(filter_list)
+    else:
+        return jsonify([p.to_dict() for p in place_list])
