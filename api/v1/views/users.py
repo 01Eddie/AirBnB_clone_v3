@@ -8,9 +8,11 @@ from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.user import User
+from flasgger.utils import swag_from
 
 
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
+@swag_from('swagger_yaml/user/users_get.yml', methods=['GET'])
 def get_users():
     """get users"""
     getListU = []
@@ -20,6 +22,7 @@ def get_users():
 
 
 @app_views.route('/users/<user_id>', methods=['GET'], strict_slashes=False)
+@swag_from('swagger_yaml/user/user_get.yml', methods=['GET'])
 def retrieve_User(user_id):
     """get user by id"""
     user = storage.get("User", user_id)
@@ -29,6 +32,7 @@ def retrieve_User(user_id):
 
 
 @app_views.route('/users/<user_id>', methods=['DELETE'], strict_slashes=False)
+@swag_from('swagger_yaml/user/user_delete.yml', methods=['DELETE'])
 def user_delete(user_id):
     """delete a user"""
     user = storage.get("User", user_id)
@@ -40,6 +44,7 @@ def user_delete(user_id):
 
 
 @app_views.route('/users', methods=['POST'], strict_slashes=False)
+@swag_from('swagger_yaml/user/user_post.yml', methods=['POST'])
 def user_post():
     """create a user"""
     if request.get_json() is None:
@@ -54,6 +59,7 @@ def user_post():
 
 
 @app_views.route('/users/<user_id>', methods=['PUT'], strict_slashes=False)
+@swag_from('swagger_yaml/user/user_put.yml', methods=['PUT'])
 def user_put(user_id):
     """update a user"""
     user = storage.get("User", user_id)
