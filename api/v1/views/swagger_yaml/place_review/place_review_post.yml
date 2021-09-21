@@ -1,0 +1,28 @@
+flasgger endpoint for POST request for amenities data
+---
+
+paths:
+  '/places/{place_id}/reviews':
+post:
+  tags:
+    - /places/{place_id}/reviews
+  parameters:
+    - name: place_id
+      in: path
+      data: string
+      required: true
+      description: the unique place id of place to review to post
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the place reviewto post
+responses:
+  200:
+    description: objects of the post place review data
+  400:
+    description: bad request for place review data

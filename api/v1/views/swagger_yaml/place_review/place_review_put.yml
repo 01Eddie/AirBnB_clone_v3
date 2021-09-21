@@ -1,0 +1,25 @@
+flasgger endpoint for PUT request for amenities data
+---
+paths:
+  '/reviews/{review_id}':
+put:
+  tags:
+    - /reviews/{review_id}
+  parameters:
+    - name: review_id
+      in: path
+      data: string
+      required: true
+      description: the unique review id of place review to put
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the place review to put
+  responses:
+    200:
+      description: objects put of the place review

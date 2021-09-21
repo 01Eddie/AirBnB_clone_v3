@@ -1,0 +1,28 @@
+flasgger endpoint for DELETE request for amenities data
+---
+
+paths:
+  '/reviews/{review_id}':
+delete:
+  tags:
+    - /reviews/{review_id}
+  parameters:
+    - name: review_id
+      in: path
+      data: string
+      required: true
+      description: the unique review id of place review to delete
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the place review to delete
+responses:
+  200:
+    description: Empty list
+  400:
+    description: bad request for place review data

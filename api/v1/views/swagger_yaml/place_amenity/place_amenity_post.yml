@@ -1,0 +1,33 @@
+flasgger endpoint for POST request for amenities data
+---
+
+paths:
+  '/places/{place_id}/amenities/{amenity_id}':
+post:
+  tags:
+    - /places/{place_id}/amenities/{amenity_id}
+  parameters:
+    - name: place_id
+      in: path
+      data: string
+      required: false
+      description: the unique place id of places to post
+    - name: amenity_id
+      in: path
+      data: string
+      required: false
+      description: the unique amenity id of amenity to post
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the amenity to post
+responses:
+  200:
+    description: objects of the post amenities data of the file place amenity post
+  400:
+    description: bad request for amenities data

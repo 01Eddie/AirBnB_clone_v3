@@ -1,0 +1,26 @@
+flasgger endpoint for GET request for amenities data
+GET: returns a amenity data
+---
+paths:
+  '/users/{user_id}':
+get:
+tags:
+  - /users/{user_id}
+parameters:
+  - name: user_id
+    in: path
+    data: string
+    required: true
+    description: the unique user id of users to get
+  - name: name
+    in: body
+    data: string
+    required: false
+    schema:
+      properties:
+        name:
+          type: string
+          description: name attribute of the users to get
+responses:
+  200:
+    description: objects get users data

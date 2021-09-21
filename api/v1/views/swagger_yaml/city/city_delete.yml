@@ -1,0 +1,28 @@
+flasgger endpoint for DELETE request for amenities data
+---
+
+paths:
+  '/cities/{city_id}':
+delete:
+  tags:
+    - /cities/{city_id}
+  parameters:
+    - name: city_id
+      in: path
+      data: string
+      required: true
+      description: the unique city id of city to delete
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the city to delete
+responses:
+  200:
+    description: Empty list
+  400:
+    description: bad request for cities data

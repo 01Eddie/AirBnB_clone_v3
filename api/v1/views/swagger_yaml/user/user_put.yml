@@ -1,0 +1,25 @@
+flasgger endpoint for PUT request for amenities data
+---
+paths:
+  '/users/{user_id}':
+put:
+  tags:
+    - /users/{user_id}
+  parameters:
+    - name: user_id
+      in: path
+      data: string
+      required: true
+      description: the unique user id of users to put
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the user to put
+  responses:
+    200:
+      description: objects put of the user

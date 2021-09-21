@@ -1,0 +1,28 @@
+flasgger endpoint for DELETE request for amenities data
+---
+
+paths:
+  '/places/<place_id>':
+delete:
+  tags:
+    - /places/<place_id>
+  parameters:
+    - name: place_id
+      in: path
+      data: string
+      required: true
+      description: the unique place id of place to delete
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the place to delete
+responses:
+  200:
+    description: Empty list
+  400:
+    description: bad request for places data

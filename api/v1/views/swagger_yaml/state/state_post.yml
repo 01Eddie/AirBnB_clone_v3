@@ -1,0 +1,28 @@
+flasgger endpoint for POST request for amenities data
+---
+
+paths:
+  '/states':
+post:
+  tags:
+    - /states
+  parameters:
+    - name: state_id
+      in: path
+      data: string
+      required: false
+      description: the unique state id of state to post is null
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the state to post
+responses:
+  200:
+    description: objects of the post states data
+  400:
+    description: bad request for states data

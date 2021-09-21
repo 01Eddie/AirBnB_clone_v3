@@ -1,0 +1,22 @@
+flasgger endpoint for GET request for amenities data
+---
+tags:
+  - /places/{place_id}
+parameters:
+  - name: place_id
+    in: body
+    data: string
+    required: false
+    schema:
+      properties:
+        name:
+          type: string
+          description: name attribute of the places to get
+responses:
+  200:
+    description: objects of get places
+    schema:
+      properties:
+        __class__:
+          type: string
+          description: Class name (obj.__class__.__name__)

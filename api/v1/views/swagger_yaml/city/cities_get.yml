@@ -1,0 +1,22 @@
+flasgger endpoint for GET request for amenities data
+---
+tags:
+  - /states/{state_id}/cities
+parameters:
+  - name: state_id
+    in: body
+    data: string
+    required: true
+    schema:
+      properties:
+        name:
+          type: string
+          description: name attribute of the cities to get
+responses:
+  200:
+    description: objects of get cities
+    schema:
+      properties:
+        __class__:
+          type: string
+          description: Class name (obj.__class__.__name__)

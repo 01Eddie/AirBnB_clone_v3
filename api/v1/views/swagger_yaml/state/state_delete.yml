@@ -1,0 +1,28 @@
+flasgger endpoint for DELETE request for amenities data
+---
+
+paths:
+  '/states/{state_id}':
+delete:
+  tags:
+    - /states/{state_id}
+  parameters:
+    - name: state_id
+      in: path
+      data: string
+      required: true
+      description: the unique state id of states to delete
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the state to delete
+responses:
+  200:
+    description: Empty list
+  400:
+    description: bad request for states data

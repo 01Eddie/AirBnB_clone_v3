@@ -1,0 +1,22 @@
+flasgger endpoint for GET request for amenities data
+---
+tags:
+  - /users
+parameters:
+  - name: user_id
+    in: body
+    data: string
+    required: false
+    schema:
+      properties:
+        name:
+          type: string
+          description: name attribute of the users to get is null
+responses:
+  200:
+    description: objects of get users
+    schema:
+      properties:
+        __class__:
+          type: string
+          description: Class name (obj.__class__.__name__)

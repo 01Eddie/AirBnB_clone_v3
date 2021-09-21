@@ -1,0 +1,25 @@
+flasgger endpoint for PUT request for amenities data
+---
+paths:
+  '/places/{place_id}':
+put:
+  tags:
+    - /places/{place_id}
+  parameters:
+    - name: place_id
+      in: path
+      data: string
+      required: true
+      description: the unique place id of places to put
+    - name: name
+      in: body
+      data: string
+      required: false
+      schema:
+        properties:
+          name:
+            type: string
+            description: name attribute of the place to put
+  responses:
+    200:
+      description: objects put of the place

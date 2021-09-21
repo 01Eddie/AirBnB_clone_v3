@@ -1,0 +1,24 @@
+flasgger endpoint for GET request for amenities data
+---
+paths:
+  '/amenities/{amenity_id}':
+tags:
+  - /amenities/{amenity_id}
+parameters:
+  - name: amenity_id
+    in: path
+    data: string
+    required: true
+    description: the unique amenity id of amenity to get
+  - name: name
+    in: body
+    data: string
+    required: false
+    schema:
+      properties:
+        name:
+          type: string
+          description: name attribute of the amenity to get
+responses:
+  200:
+    description: objects get amenity data
