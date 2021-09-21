@@ -11,12 +11,15 @@ from models.amenity import Amenity
 from models.user import User
 from models.place import Place
 from models.review import Review
+from flasgger.utils import swag_from
 
 TYPE_STORAGE = getenv('HBNB_TYPE_STORAGE')
 
 
 @app_views.route('/places/<place_id>/amenities', methods=['GET'],
                  strict_slashes=False)
+@swag_from('swagger_yaml/places_amenity/place_amenities_get.yml',
+           methods=['GET'])
 def retrieve_Amenity_for_place(place_id):
     """Retrieves the list of all Amenity objects of a Place"""
     place = storage.get("Place", place_id)
@@ -34,6 +37,8 @@ def retrieve_Amenity_for_place(place_id):
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
                  methods=['DELETE'], strict_slashes=False)
+@swag_from('swagger_yaml/places_amenity/place_amenity_delete.yml',
+           methods=['DELETE'])
 def place_amenity_delete(place_id, amenity_id):
     """delete a amenity object from a Place"""
     place = storage.get("Place", place_id)
@@ -53,6 +58,8 @@ def place_amenity_delete(place_id, amenity_id):
 
 @app_views.route('/places/<place_id>/amenities/<amenity_id>',
                  methods=['POST'], strict_slashes=False)
+@swag_from('swagger_yaml/places_amenity/place_amenity_post.yml',
+           methods=['POST'])
 def amenity_place_post(place_id, amenity_id):
     """Link a Amenity object to a Place"""
     place = storage.get("Place", place_id)
