@@ -10,10 +10,12 @@ from models.amenity import Amenity
 from models.user import User
 from models.place import Place
 from models.review import Review
+from flasgger.utils import swag_from
 
 
 @app_views.route('/places/<place_id>/reviews', methods=['GET'],
                  strict_slashes=False)
+@swag_from('swagger_yaml/places_review/place_reviews_get.yml', methods=['GET'])
 def get_place_reviews(place_id):
     """get places reviews"""
     objPlaceReview = storage.get("Place", place_id)
@@ -27,6 +29,7 @@ def get_place_reviews(place_id):
 
 
 @app_views.route('/reviews/<review_id>', methods=['GET'], strict_slashes=False)
+@swag_from('swagger_yaml/places_review/place_review_get.yml', methods=['GET'])
 def retrieve_place_review(review_id):
     """get place review by id"""
     placeR = storage.get("Review", review_id)
@@ -37,6 +40,8 @@ def retrieve_place_review(review_id):
 
 @app_views.route('/reviews/<review_id>', methods=['DELETE'],
                  strict_slashes=False)
+@swag_from('swagger_yaml/places_review/place_review_delete.yml',
+           methods=['DELETE'])
 def place_review_delete(review_id):
     """delete a place review"""
     placeR = storage.get("Review", review_id)
@@ -49,6 +54,8 @@ def place_review_delete(review_id):
 
 @app_views.route('/places/<place_id>/reviews', methods=['POST'],
                  strict_slashes=False)
+@swag_from('swagger_yaml/places_review/place_review_post.yml',
+           methods=['POST'])
 def place_review_post(place_id):
     """create a place review"""
     place = storage.get("Place", place_id)
@@ -72,6 +79,7 @@ def place_review_post(place_id):
 
 
 @app_views.route('/reviews/<review_id>', methods=['PUT'], strict_slashes=False)
+@swag_from('swagger_yaml/places_review/place_review_put.yml', methods=['PUT'])
 def place_revies_put(review_id):
     """update a place review"""
     placeR = storage.get("Review", review_id)
