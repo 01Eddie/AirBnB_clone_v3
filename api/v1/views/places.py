@@ -10,10 +10,12 @@ from models.amenity import Amenity
 from models.user import User
 from models.place import Place
 from os import getenv
+from flasgger.utils import swag_from
 
 
 @app_views.route('/cities/<city_id>/places', methods=['GET'],
                  strict_slashes=False)
+@swag_from('swagger_yaml/place/places_get.yml', methods=['GET'])
 def get_place(city_id):
     """get places"""
     objPlace = storage.get("City", city_id)
@@ -27,6 +29,7 @@ def get_place(city_id):
 
 
 @app_views.route('/places/<place_id>', methods=['GET'], strict_slashes=False)
+@swag_from('swagger_yaml/place/place_get.yml', methods=['GET'])
 def retrieve_place(place_id):
     """get place by id"""
     place = storage.get("Place", place_id)
@@ -37,6 +40,7 @@ def retrieve_place(place_id):
 
 @app_views.route('/places/<place_id>', methods=['DELETE'],
                  strict_slashes=False)
+@swag_from('swagger_yaml/place/place_delete.yml', methods=['DELETE'])
 def place_delete(place_id):
     """delete a place"""
     place = storage.get("Place", place_id)
@@ -49,6 +53,7 @@ def place_delete(place_id):
 
 @app_views.route('/cities/<city_id>/places', methods=['POST'],
                  strict_slashes=False)
+@swag_from('swagger_yaml/place/place_post.yml', methods=['POST'])
 def place_post(city_id):
     """create a place"""
     city = storage.get("City", city_id)
@@ -72,6 +77,7 @@ def place_post(city_id):
 
 
 @app_views.route('/places/<place_id>', methods=['PUT'], strict_slashes=False)
+@swag_from('swagger_yaml/place/place_put.yml', methods=['PUT'])
 def place_put(place_id):
     """update a place"""
     place = storage.get("Place", place_id)
